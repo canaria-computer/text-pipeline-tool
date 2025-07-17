@@ -27,7 +27,9 @@
   "devDependencies": {
     "@builder.io/qwik": "^1.14.1",
     "@builder.io/qwik-city": "^1.14.1",
+    "@egoist/tailwindcss-icons": "^1.9.0",
     "@eslint/js": "latest",
+    "@iconify/json": "^2.2.359",
     "@tailwindcss/vite": "^4.1.11",
     "@types/node": "20.14.11",
     "@vitest/ui": "^0.34.7",
