@@ -13,7 +13,7 @@ export default component$(() => {
               <span class="block text-primary-600 dark:text-primary-400">Pipeline</span>
             </h1>
             <p class="max-w-2xl mx-auto text-lg sm:text-xl text-gray-600 dark:text-gray-400">
-              Build powerful multi-stage text transformations with regular expressions, 
+              Build powerful multi-stage text transformations with regular expressions,
               drag-and-drop interface, and real-time preview.
             </p>
           </div>
@@ -85,10 +85,11 @@ export default component$(() => {
           <div class="pt-8">
             <a
               href="/text-processor"
-              class="inline-flex items-center gap-2 px-8 py-4 text-lg font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors shadow-lg"
+              class="inline-flex items-center gap-2 px-8 py-4 text-lg font-medium dark:text-white bg-primary-600 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors shadow-lg"
             >
               <div class="w-5 h-5 i-heroicons-rocket-launch"></div>
               Start Processing Text
+              <div class="i-heroicons-arrow-right"></div>
             </a>
           </div>
         </div>
