@@ -87,7 +87,7 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(({ stages, onSta
         </h2>
         <button
           onClick$={addStage}
-          class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+          class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium dark:text-white bg-primary-600 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
         >
           <div class="w-4 h-4 i-heroicons-plus"></div>
           Add Stage

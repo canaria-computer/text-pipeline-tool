@@ -37,30 +37,28 @@ export const PipelineStageComponent = component$<PipelineStageProps>(({
     >
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2">
-          <div class="drag-handle p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+          <div class="drag-handle p-1 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
             <div class="w-4 h-4 i-heroicons-bars-3 cursor-grab active:cursor-grabbing"></div>
           </div>
           <input
             type="text"
             value={stage.name}
             onInput$={(event) => onUpdate({ name: (event.target as HTMLInputElement).value })}
-            class="font-medium text-sm bg-transparent border-none outline-none focus:bg-gray-50 dark:focus:bg-gray-700 px-2 py-1 rounded"
+            class="font-medium text-sm bg-transparent border-none outline-none focus:bg-gray-50 dark:focus:bg-gray-700 dark:text-white px-2 py-1 rounded"
             placeholder="Stage name"
           />
         </div>
         <div class="flex items-center gap-2">
-          <label class="flex items-center gap-1 text-xs">
-            <input
-              type="checkbox"
-              checked={stage.enabled}
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox" class="sr-only peer" checked={stage.enabled}
               onChange$={(event) => onUpdate({ enabled: (event.target as HTMLInputElement).checked })}
-              class="w-3 h-3 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
             />
-            <span class="text-gray-600 dark:text-gray-400">Enabled</span>
+            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+            <span class="text-gray-600 dark:text-gray-400 sr-only">Enabled</span>
           </label>
           <button
             onClick$={onDelete}
-            class="p-1 text-gray-400 hover:text-red-500 transition-colors"
+            class="p-1 text-white bg-red-600 transition-colors"
             title="Delete stage"
           >
             <div class="w-4 h-4 i-heroicons-trash"></div>
@@ -77,20 +75,20 @@ export const PipelineStageComponent = component$<PipelineStageProps>(({
             type="text"
             value={stage.pattern}
             onInput$={(event) => onUpdate({ pattern: (event.target as HTMLInputElement).value })}
-            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md font-mono focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             placeholder="Enter search pattern..."
           />
         </div>
 
         <div>
-          <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label class="block text-xs font-medium font-mono text-gray-700 dark:text-gray-300 mb-1">
             Replacement
           </label>
           <input
             type="text"
             value={stage.replacement}
             onInput$={(event) => onUpdate({ replacement: (event.target as HTMLInputElement).value })}
-            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md font-mono focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
             placeholder="Enter replacement text..."
           />
         </div>
@@ -103,6 +101,7 @@ export const PipelineStageComponent = component$<PipelineStageProps>(({
               onChange$={(event) => onUpdate({ caseSensitive: (event.target as HTMLInputElement).checked })}
               class="w-3 h-3 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
             />
+            <div class="i-mdi-format-letter-case size-5 dark:text-white"></div>
             <span class="text-gray-600 dark:text-gray-400">Case sensitive</span>
           </label>
 
@@ -113,6 +112,7 @@ export const PipelineStageComponent = component$<PipelineStageProps>(({
               onChange$={(event) => onUpdate({ wordBoundary: (event.target as HTMLInputElement).checked })}
               class="w-3 h-3 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
             />
+            <div class="i-mdi-format-letter-matches size-5 dark:text-white"></div>
             <span class="text-gray-600 dark:text-gray-400">Word boundary</span>
           </label>
 
@@ -123,6 +123,7 @@ export const PipelineStageComponent = component$<PipelineStageProps>(({
               onChange$={(event) => onUpdate({ useRegex: (event.target as HTMLInputElement).checked })}
               class="w-3 h-3 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
             />
+            <div class="i-mdi-regex size-5 dark:text-white"></div>
             <span class="text-gray-600 dark:text-gray-400">Use regex</span>
           </label>
         </div>
