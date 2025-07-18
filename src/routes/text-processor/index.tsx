@@ -5,10 +5,12 @@ import { TextInput } from "~/components/text-processor/text-input";
 import { TextOutput } from "~/components/text-processor/text-output";
 import type { PipelineStage } from "~/types/pipeline";
 import { processText } from "~/utils/text-processor";
+import { textProcessingExamples } from "~/data/examples";
 
 export default component$(() => {
   const inputText = useSignal("");
   const stages = useSignal<PipelineStage[]>([]);
+  const selectedExampleId = useSignal("");
 
   const result = useComputed$(() => {
     if (!inputText.value || stages.value.length === 0) {
@@ -17,55 +19,21 @@ export default component$(() => {
     return processText(inputText.value, stages.value);
   });
 
-  const loadExample = $(() => {
-    const exampleText = `Hello World! This is a sample text for processing.
-Visit https://example.com and contact us at support@example.com.
-Phone numbers: (555) 123-4567 and +1-800-555-0199.
-Some HTML tags: <div>content</div> and <span class="highlight">text</span>.`;
-
-    const exampleStages: PipelineStage[] = [
-      {
-        id: "email-stage",
-        name: "Extract Emails",
-        pattern: "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}",
-        replacement: "[EMAIL]",
-        caseSensitive: false,
-        wordBoundary: false,
-        useRegex: true,
-        enabled: true,
-        order: 0,
-      },
-      {
-        id: "url-stage",
-        name: "Extract URLs",
-        pattern: "https?://[^\\s]+",
-        replacement: "[URL]",
-        caseSensitive: false,
-        wordBoundary: false,
-        useRegex: true,
-        enabled: true,
-        order: 1,
-      },
-      {
-        id: "phone-stage",
-        name: "Extract Phone Numbers",
-        pattern: "\\+?1?[-.]?\\(?\\d{3}\\)?[-.]?\\d{3}[-.]?\\d{4}",
-        replacement: "[PHONE]",
-        caseSensitive: false,
-        wordBoundary: false,
-        useRegex: true,
-        enabled: true,
-        order: 2,
-      },
-    ];
-
-    inputText.value = exampleText;
-    stages.value = exampleStages;
+  const loadExample = $((exampleId?: string) => {
+    const id =
+      exampleId || selectedExampleId.value || textProcessingExamples[0].id;
+    const example =
+      textProcessingExamples.find((ex) => ex.id === id) ||
+      textProcessingExamples[0];
+    inputText.value = example.inputText;
+    stages.value = example.stages;
+    selectedExampleId.value = example.id;
   });
 
   const clearAll = $(() => {
     inputText.value = "";
     stages.value = [];
+    selectedExampleId.value = "";
   });
 
   return (
@@ -84,8 +52,24 @@ Some HTML tags: <div>content</div> and <span class="highlight">text</span>.`;
               </p>
             </div>
             <div class="flex items-center gap-3">
+              <select
+                value={selectedExampleId.value}
+                onChange$={(event) => {
+                  selectedExampleId.value = (
+                    event.target as HTMLSelectElement
+                  ).value;
+                }}
+                class="focus:border-primary-500 focus:ring-primary-500 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+              >
+                <option value="">Select an example...</option>
+                {textProcessingExamples.map((example) => (
+                  <option key={example.id} value={example.id}>
+                    {example.name}
+                  </option>
+                ))}
+              </select>
               <button
-                onClick$={loadExample}
+                onClick$={() => loadExample()}
                 class="text-primary-600 border-primary-600 hover:bg-primary-50 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md border bg-white px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
               >
                 <div class="i-heroicons-sparkles h-4 w-4"></div>
