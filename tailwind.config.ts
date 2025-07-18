@@ -1,4 +1,4 @@
-import { iconsPlugin, getIconCollections } from "@egoist/tailwindcss-icons"
+import { iconsPlugin, getIconCollections } from "@egoist/tailwindcss-icons";
 
 module.exports = {
   plugins: [
@@ -6,4 +6,4 @@ module.exports = {
       collections: getIconCollections(["mdi", "heroicons"]),
     }),
   ],
-}
+};
