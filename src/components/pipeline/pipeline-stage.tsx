@@ -1,5 +1,5 @@
-import { component$, type QRL } from '@builder.io/qwik';
-import type { PipelineStage } from '~/types/pipeline';
+import { component$, type QRL } from "@builder.io/qwik";
+import type { PipelineStage } from "~/types/pipeline";
 
 interface PipelineStageProps {
   stage: PipelineStage;
@@ -9,125 +9,154 @@ interface PipelineStageProps {
   isDragging: boolean;
 }
 
-export const PipelineStageComponent = component$<PipelineStageProps>(({
-  stage,
-  onUpdate,
-  onDelete,
-  onDragStart,
-  isDragging,
-}) => {
-  return (
-    <div
-      class={[
-        'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 shadow-sm transition-all duration-200',
-        isDragging ? 'dragging' : 'hover:shadow-md',
-      ]}
-      draggable
-      onDragStart$={(event) => {
-        onDragStart(stage.id);
-        if (event.target) {
-          (event.target as HTMLElement).classList.add('dragging');
-        }
-      }}
-      onDragEnd$={(event) => {
-        if (event.target) {
-          (event.target as HTMLElement).classList.remove('dragging');
-        }
-      }}
-    >
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-2">
-          <div class="drag-handle p-1 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-            <div class="w-4 h-4 i-heroicons-bars-3 cursor-grab active:cursor-grabbing"></div>
+export const PipelineStageComponent = component$<PipelineStageProps>(
+  ({ stage, onUpdate, onDelete, onDragStart, isDragging }) => {
+    return (
+      <div
+        class={[
+          "rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all duration-200 dark:border-gray-700 dark:bg-gray-800",
+          isDragging ? "dragging" : "hover:shadow-md",
+        ]}
+        draggable
+        onDragStart$={(event) => {
+          onDragStart(stage.id);
+          if (event.target) {
+            (event.target as HTMLElement).classList.add("dragging");
+          }
+        }}
+        onDragEnd$={(event) => {
+          if (event.target) {
+            (event.target as HTMLElement).classList.remove("dragging");
+          }
+        }}
+      >
+        <div class="mb-3 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="drag-handle p-1 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-300">
+              <div class="i-heroicons-bars-3 h-4 w-4 cursor-grab active:cursor-grabbing"></div>
+            </div>
+            <input
+              type="text"
+              value={stage.name}
+              onInput$={(event) =>
+                onUpdate({ name: (event.target as HTMLInputElement).value })
+              }
+              class="rounded border-none bg-transparent px-2 py-1 text-sm font-medium outline-none focus:bg-gray-50 dark:text-white dark:focus:bg-gray-700"
+              placeholder="Stage name"
+            />
           </div>
-          <input
-            type="text"
-            value={stage.name}
-            onInput$={(event) => onUpdate({ name: (event.target as HTMLInputElement).value })}
-            class="font-medium text-sm bg-transparent border-none outline-none focus:bg-gray-50 dark:focus:bg-gray-700 dark:text-white px-2 py-1 rounded"
-            placeholder="Stage name"
-          />
+          <div class="flex items-center gap-2">
+            <label class="inline-flex cursor-pointer items-center">
+              <input
+                type="checkbox"
+                class="peer sr-only"
+                checked={stage.enabled}
+                onChange$={(event) =>
+                  onUpdate({
+                    enabled: (event.target as HTMLInputElement).checked,
+                  })
+                }
+              />
+              <div class="peer relative h-6 w-11 rounded-full bg-gray-200 peer-checked:bg-blue-600 peer-focus:ring-4 peer-focus:ring-blue-300 peer-focus:outline-none after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full dark:border-gray-600 dark:bg-gray-700 dark:peer-checked:bg-blue-600 dark:peer-focus:ring-blue-800"></div>
+              <span class="sr-only text-gray-600 dark:text-gray-400">
+                Enabled
+              </span>
+            </label>
+            <button
+              onClick$={onDelete}
+              class="bg-red-600 p-1 text-white transition-colors"
+              title="Delete stage"
+            >
+              <div class="i-heroicons-trash h-4 w-4"></div>
+            </button>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <label class="inline-flex items-center cursor-pointer">
-            <input type="checkbox" class="sr-only peer" checked={stage.enabled}
-              onChange$={(event) => onUpdate({ enabled: (event.target as HTMLInputElement).checked })}
+
+        <div class="space-y-3">
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-700 dark:text-gray-300">
+              Search Pattern
+            </label>
+            <input
+              type="text"
+              value={stage.pattern}
+              onInput$={(event) =>
+                onUpdate({ pattern: (event.target as HTMLInputElement).value })
+              }
+              class="focus:ring-primary-500 w-full rounded-md border border-gray-300 bg-white px-3 py-2 font-mono text-sm text-gray-900 focus:border-transparent focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+              placeholder="Enter search pattern..."
             />
-            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
-            <span class="text-gray-600 dark:text-gray-400 sr-only">Enabled</span>
-          </label>
-          <button
-            onClick$={onDelete}
-            class="p-1 text-white bg-red-600 transition-colors"
-            title="Delete stage"
-          >
-            <div class="w-4 h-4 i-heroicons-trash"></div>
-          </button>
+          </div>
+
+          <div>
+            <label class="mb-1 block font-mono text-xs font-medium text-gray-700 dark:text-gray-300">
+              Replacement
+            </label>
+            <input
+              type="text"
+              value={stage.replacement}
+              onInput$={(event) =>
+                onUpdate({
+                  replacement: (event.target as HTMLInputElement).value,
+                })
+              }
+              class="focus:ring-primary-500 w-full rounded-md border border-gray-300 bg-white px-3 py-2 font-mono text-sm text-gray-900 focus:border-transparent focus:ring-2 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+              placeholder="Enter replacement text..."
+            />
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <label class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={stage.caseSensitive}
+                onChange$={(event) =>
+                  onUpdate({
+                    caseSensitive: (event.target as HTMLInputElement).checked,
+                  })
+                }
+                class="text-primary-600 focus:ring-primary-500 h-3 w-3 rounded border-gray-300 bg-gray-100"
+              />
+              <div class="i-mdi-format-letter-case size-5 dark:text-white"></div>
+              <span class="text-gray-600 dark:text-gray-400">
+                Case sensitive
+              </span>
+            </label>
+
+            <label class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={stage.wordBoundary}
+                onChange$={(event) =>
+                  onUpdate({
+                    wordBoundary: (event.target as HTMLInputElement).checked,
+                  })
+                }
+                class="text-primary-600 focus:ring-primary-500 h-3 w-3 rounded border-gray-300 bg-gray-100"
+              />
+              <div class="i-mdi-format-letter-matches size-5 dark:text-white"></div>
+              <span class="text-gray-600 dark:text-gray-400">
+                Word boundary
+              </span>
+            </label>
+
+            <label class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={stage.useRegex}
+                onChange$={(event) =>
+                  onUpdate({
+                    useRegex: (event.target as HTMLInputElement).checked,
+                  })
+                }
+                class="text-primary-600 focus:ring-primary-500 h-3 w-3 rounded border-gray-300 bg-gray-100"
+              />
+              <div class="i-mdi-regex size-5 dark:text-white"></div>
+              <span class="text-gray-600 dark:text-gray-400">Use regex</span>
+            </label>
+          </div>
         </div>
       </div>
-
-      <div class="space-y-3">
-        <div>
-          <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Search Pattern
-          </label>
-          <input
-            type="text"
-            value={stage.pattern}
-            onInput$={(event) => onUpdate({ pattern: (event.target as HTMLInputElement).value })}
-            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md font-mono focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-            placeholder="Enter search pattern..."
-          />
-        </div>
-
-        <div>
-          <label class="block text-xs font-medium font-mono text-gray-700 dark:text-gray-300 mb-1">
-            Replacement
-          </label>
-          <input
-            type="text"
-            value={stage.replacement}
-            onInput$={(event) => onUpdate({ replacement: (event.target as HTMLInputElement).value })}
-            class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md font-mono focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-            placeholder="Enter replacement text..."
-          />
-        </div>
-
-        <div class="grid grid-cols-2 gap-3 text-xs">
-          <label class="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={stage.caseSensitive}
-              onChange$={(event) => onUpdate({ caseSensitive: (event.target as HTMLInputElement).checked })}
-              class="w-3 h-3 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
-            />
-            <div class="i-mdi-format-letter-case size-5 dark:text-white"></div>
-            <span class="text-gray-600 dark:text-gray-400">Case sensitive</span>
-          </label>
-
-          <label class="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={stage.wordBoundary}
-              onChange$={(event) => onUpdate({ wordBoundary: (event.target as HTMLInputElement).checked })}
-              class="w-3 h-3 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
-            />
-            <div class="i-mdi-format-letter-matches size-5 dark:text-white"></div>
-            <span class="text-gray-600 dark:text-gray-400">Word boundary</span>
-          </label>
-
-          <label class="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={stage.useRegex}
-              onChange$={(event) => onUpdate({ useRegex: (event.target as HTMLInputElement).checked })}
-              class="w-3 h-3 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
-            />
-            <div class="i-mdi-regex size-5 dark:text-white"></div>
-            <span class="text-gray-600 dark:text-gray-400">Use regex</span>
-          </label>
-        </div>
-      </div>
-    </div>
-  );
-});
+    );
+  },
+);
