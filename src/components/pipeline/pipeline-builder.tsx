@@ -24,7 +24,7 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
         replacement: "",
         caseSensitive: false,
         wordBoundary: false,
-        useRegex: false,
+        useRegex: true,
         enabled: true,
         order: stages.length,
       };
