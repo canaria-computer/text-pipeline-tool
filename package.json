@@ -2,6 +2,7 @@
   "name": "text-processing-pipeline",
   "description": "A powerful multi-stage text transformation tool built with Qwik, featuring a drag-and-drop interface for creating complex text processing pipelines with regular expressions.",
   "version": "0.0.0-alpha.1",
+  "license": "AGPL-3.0-only",
   "engines": {
     "node": "^18.17.0 || ^20.3.0 || >=21.0.0"
   },
