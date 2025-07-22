@@ -1,0 +1,45 @@
+name: 📦 Version Tagging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 🔄 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📝 Get package version
+        id: package_version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> $GITHUB_OUTPUT
+          echo "Package version: $version"
+
+      - name: 🔍 Check if tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ steps.package_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.package_version.outputs.version }} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.package_version.outputs.version }} does not exist"
+          fi
+
+      - name: 🔖 Create and push tag
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a "v${{ steps.package_version.outputs.version }}" -m "Release v${{ steps.package_version.outputs.version }}"
+          git push origin "v${{ steps.package_version.outputs.version }}"
+          echo "✅ Tag v${{ steps.package_version.outputs.version }} created successfully"
