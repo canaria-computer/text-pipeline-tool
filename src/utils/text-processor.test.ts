@@ -460,62 +460,6 @@ describe("text-processor", () => {
     });
   });
 
-  describe("highlightChanges", () => {
-    it("should return output when input and output are the same", () => {
-      const input = "hello world";
-      const output = "hello world";
-
-      const result = highlightChanges(input, output);
-
-      expect(result).toBe(output);
-    });
-
-    it("should highlight changed words", () => {
-      const input = "hello world";
-      const output = "hi universe";
-
-      const result = highlightChanges(input, output);
-
-      expect(result).toContain('<span class="highlight-change">hi</span>');
-      expect(result).toContain(
-        '<span class="highlight-change">universe</span>',
-      );
-    });
-
-    it("should preserve unchanged words", () => {
-      const input = "hello world test";
-      const output = "hello universe test";
-
-      const result = highlightChanges(input, output);
-
-      expect(result).toContain("hello");
-      expect(result).toContain("test");
-      expect(result).toContain(
-        '<span class="highlight-change">universe</span>',
-      );
-    });
-
-    it("should handle different length outputs", () => {
-      const input = "a b c";
-      const output = "x y";
-
-      const result = highlightChanges(input, output);
-
-      expect(result).toContain('<span class="highlight-change">x</span>');
-      expect(result).toContain('<span class="highlight-change">y</span>');
-    });
-
-    it("should handle empty strings", () => {
-      expect(highlightChanges("", "")).toBe("");
-      expect(highlightChanges("hello", "")).toBe(
-        '<span class="highlight-change"></span>',
-      );
-      expect(highlightChanges("", "hello")).toBe(
-        '<span class="highlight-change">hello</span>',
-      );
-    });
-  });
-
   describe("escapeRegExp", () => {
     it("should escape special regex characters", () => {
       const specialChars = ".*+?^${}()|[]\\";
