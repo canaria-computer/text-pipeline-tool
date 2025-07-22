@@ -66,7 +66,7 @@ function processStage(input: string, stage: PipelineStage): StepResult {
         result = input.replace(regex, stage.replacement);
       } else {
         const searchValue = stage.caseSensitive
-          ? pattern
+          ? new RegExp(escapeRegExp(pattern), "g")
           : new RegExp(escapeRegExp(pattern), "gi");
         const matches = input.match(searchValue);
         matchCount = matches ? matches.length : 0;
