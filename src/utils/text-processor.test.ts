@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { processText, validateRegex, highlightChanges } from "./text-processor";
+import { processText, validateRegex } from "./text-processor";
 import type { PipelineStage } from "~/types/pipeline";
 
 // Helper function to access the private escapeRegExp function for testing
