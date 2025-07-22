@@ -115,27 +115,3 @@ export function validateRegex(pattern: string): {
     };
   }
 }
-
-export function highlightChanges(input: string, output: string): string {
-  if (input === output) return output;
-
-  // Simple diff highlighting - can be enhanced with proper diff algorithm
-  const inputWords = input.split(/(\s+)/);
-  const outputWords = output.split(/(\s+)/);
-
-  let result = "";
-  const maxLength = Math.max(inputWords.length, outputWords.length);
-
-  for (let i = 0; i < maxLength; i++) {
-    const inputWord = inputWords[i] || "";
-    const outputWord = outputWords[i] || "";
-
-    if (inputWord !== outputWord) {
-      result += `<span class="highlight-change">${outputWord}</span>`;
-    } else {
-      result += outputWord;
-    }
-  }
-
-  return result;
-}
