@@ -1,7 +1,6 @@
 import { component$, useStore, $, type QRL } from "@builder.io/qwik";
 import type { PipelineStage, DragState } from "~/types/pipeline";
 import { PipelineStageComponent } from "./pipeline-stage";
-import { reorderStages, findStageIndex } from "~/utils/drag-drop";
 import { nanoid } from "nanoid";
 
 interface PipelineBuilderProps {
