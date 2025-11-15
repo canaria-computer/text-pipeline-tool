@@ -6,6 +6,8 @@
 
 ## English
 
+![Application Image](./src/media/image.png)
+
 A powerful multi-stage text transformation tool built with Qwik, featuring a drag-and-drop interface for creating complex text processing pipelines with regular expressions.
 
 ### 🚀 Features
