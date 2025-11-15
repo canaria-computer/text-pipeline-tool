@@ -1,10 +1,6 @@
 # Cargo build artifacts
 /target/
-# wasm-pack output (except type definitions)
-/pkg/*.wasm
-/pkg/*.js
-/pkg/package.json
 
-# Keep only TypeScript definitions and metadata
-!/pkg/*.d.ts
-!/pkg/*.json
+# Large WASM files - exclude from repo
+/pkg/*.wasm
+/pkg/*_bg.js
