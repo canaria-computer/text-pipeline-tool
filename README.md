@@ -49,17 +49,20 @@ A powerful multi-stage text transformation tool built with Qwik, featuring a dra
 ```text
 src/
 ├── components/
-│   ├── pipeline/          # Pipeline management components
-│   ├── text-processor/    # Text input/output components
-│   └── starter/           # Qwik starter components
+│   ├── pipeline/            # Pipeline management (drag & drop, stage UI, move buttons, stability)
+│   ├── text-processor/      # Text input/output (diff viewer, pipeline result rendering)
+│   ├── starter/             # Qwik starter components
+│   └── diff/                # Diff display components (ON/OFF toggle, diff visualization)
 ├── routes/
-│   ├── index.tsx          # Landing page
-│   └── text-processor/    # Main application
+│   ├── index.tsx            # Landing page
+│   └── text-processor/      # Main application route
 ├── types/
-│   └── pipeline.ts        # TypeScript type definitions
+│   ├── pipeline.ts          # Pipeline types
+│   └── diff.ts              # Diff types (DiffSegment, DiffResult, enums)
 └── utils/
-    ├── text-processor.ts  # Core processing logic
-    └── drag-drop.ts       # Drag and drop utilities
+    ├── text-processor.ts    # Core text processing logic (regex, pipeline execution)
+    ├── drag-drop.ts         # Drag and drop order/update helpers
+    └── diff-calculator.ts   # jsdiff wrapper, diff calculation utilities
 ```
 
 ### 📄 License
@@ -111,17 +114,21 @@ Qwikで構築された強力なマルチステージテキスト変換ツール�
 ```text
 src/
 ├── components/
-│   ├── pipeline/          # パイプライン管理コンポーネント
-│   ├── text-processor/    # テキスト入力/出力コンポーネント
-│   └── starter/           # Qwikスターターコンポーネント
+│   ├── pipeline/            # Pipeline management (drag & drop, stage UI, move buttons, stability)
+│   ├── text-processor/      # Text input/output (diff viewer, pipeline result rendering)
+│   ├── starter/             # Qwik starter components
+│   └── diff/                # Diff display components (ON/OFF toggle, diff visualization)
 ├── routes/
-│   ├── index.tsx          # ランディングページ
-│   └── text-processor/    # メインアプリケーション
+│   ├── index.tsx            # Landing page
+│   └── text-processor/      # Main application route
 ├── types/
-│   └── pipeline.ts        # TypeScript型定義
+│   ├── pipeline.ts          # Pipeline types
+│   └── diff.ts              # Diff types (DiffSegment, DiffResult, enums)
 └── utils/
-    ├── text-processor.ts  # コア処理ロジック
-    └── drag-drop.ts       # ドラッグ&ドロップユーティリティ
+    ├── text-processor.ts    # Core text processing logic (regex, pipeline execution)
+    ├── drag-drop.ts         # Drag and drop order/update helpers
+    └── diff-calculator.ts   # jsdiff wrapper, diff calculation utilities
+
 ```
 
 ### 📄 ライセンス
