@@ -3,15 +3,21 @@ import type {
   StepResult,
   PipelineResult,
 } from "~/types/pipeline";
+import { unescapeString, isWasmReady } from "./wasm-helper";
 
 export function processText(
   input: string,
   stages: PipelineStage[],
+  options?: { unescapeInput?: boolean; unescapeOutput?: boolean },
 ): PipelineResult {
   const startTime = performance.now();
   const steps: StepResult[] = [];
-  let currentText = input;
   let totalMatches = 0;
+
+  let currentText = input;
+  if (options?.unescapeInput && isWasmReady()) {
+    currentText = unescapeString(input);
+  }
 
   const enabledStages = stages
     .filter((stage) => stage.enabled)
@@ -22,6 +28,10 @@ export function processText(
     steps.push(stepResult);
     currentText = stepResult.output;
     totalMatches += stepResult.matchCount;
+  }
+
+  if (options?.unescapeOutput && isWasmReady()) {
+    currentText = unescapeString(currentText);
   }
 
   const processingTime = performance.now() - startTime;
@@ -37,7 +47,13 @@ export function processText(
 function processStage(input: string, stage: PipelineStage): StepResult {
   try {
     let pattern = stage.pattern;
+    let replacement = stage.replacement;
     let flags = "g";
+
+    if (isWasmReady()) {
+      pattern = unescapeString(pattern);
+      replacement = unescapeString(replacement);
+    }
 
     if (!stage.caseSensitive) {
       flags += "i";
@@ -54,23 +70,22 @@ function processStage(input: string, stage: PipelineStage): StepResult {
       const regex = new RegExp(pattern, flags);
       const matches = input.match(regex);
       matchCount = matches ? matches.length : 0;
-      result = input.replace(regex, stage.replacement);
+      result = input.replace(regex, replacement);
     } else {
-      // Simple text replacement
       if (stage.wordBoundary) {
         const escapedPattern = escapeRegExp(pattern);
         const wordBoundaryPattern = `\\b${escapedPattern}\\b`;
         const regex = new RegExp(wordBoundaryPattern, flags);
         const matches = input.match(regex);
         matchCount = matches ? matches.length : 0;
-        result = input.replace(regex, stage.replacement);
+        result = input.replace(regex, replacement);
       } else {
         const searchValue = stage.caseSensitive
           ? new RegExp(escapeRegExp(pattern), "g")
           : new RegExp(escapeRegExp(pattern), "gi");
         const matches = input.match(searchValue);
         matchCount = matches ? matches.length : 0;
-        result = input.replace(searchValue, stage.replacement);
+        result = input.replace(searchValue, replacement);
       }
     }
 
@@ -106,7 +121,8 @@ export function validateRegex(pattern: string): {
   error?: string;
 } {
   try {
-    new RegExp(pattern);
+    const processedPattern = isWasmReady() ? unescapeString(pattern) : pattern;
+    new RegExp(processedPattern);
     return { isValid: true };
   } catch (error) {
     return {

@@ -54,7 +54,7 @@ export const StepResultComponent = component$<StepResultProps>(
         </button>
 
         {isExpanded.value && (
-          <div class="space-y-3 border-t border-gray-200 px-4 pb-4 pt-3 dark:border-gray-700">
+          <div class="space-y-3 border-t border-gray-200 px-4 pt-3 pb-4 dark:border-gray-700">
             {result.error && (
               <div class="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300">
                 <strong>Error:</strong> {result.error}
@@ -123,5 +123,5 @@ export const StepResultComponent = component$<StepResultProps>(
         )}
       </div>
     );
-  }
+  },
 );

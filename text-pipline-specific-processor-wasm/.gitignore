@@ -1,0 +1,6 @@
+# Cargo build artifacts
+/target/
+
+# Large WASM files - exclude from repo
+/pkg/*.wasm
+/pkg/*_bg.js

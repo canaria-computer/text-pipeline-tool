@@ -126,8 +126,9 @@ describe("calculateDiff", () => {
 
       const result = calculateDiff(oldText, newText);
 
-      expect(result.segments.some((s) => s.type === "add" && s.value === "\t"))
-        .toBe(true);
+      expect(
+        result.segments.some((s) => s.type === "add" && s.value === "\t"),
+      ).toBe(true);
       expect(result.addedCount).toBe(1);
     });
 
@@ -227,8 +228,9 @@ describe("calculateDiff", () => {
       const result = calculateDiff(oldText, newText);
 
       expect(result.addedCount).toBe(1);
-      expect(result.segments.some((s) => s.type === "add" && s.value === " "))
-        .toBe(true);
+      expect(
+        result.segments.some((s) => s.type === "add" && s.value === " "),
+      ).toBe(true);
     });
 
     it("should detect removed spaces", () => {

@@ -1,0 +1,11 @@
+[package]
+name = "text-pipline-specific-processor-wasm"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+unescape = "0.1.0"
+wasm-bindgen = "0.2.105"
+
+[lib]
+crate-type = ["cdylib"]

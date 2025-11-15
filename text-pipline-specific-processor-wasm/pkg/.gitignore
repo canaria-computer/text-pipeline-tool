@@ -1,0 +1,9 @@
+# Ignore WASM binaries and large generated files
+*.wasm
+*_bg.js
+
+# Keep essential files for CI/CD
+!package.json
+!*.d.ts
+!text_pipline_specific_processor_wasm.js
+!README.md

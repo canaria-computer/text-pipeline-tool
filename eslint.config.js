@@ -44,6 +44,7 @@ const ignores = [
   "**/yarn.lock",
   "**/server",
   "eslint.config.js",
+  "text-pipline-specific-processor-wasm/pkg/",
 ];
 
 export default tseslint.config(
