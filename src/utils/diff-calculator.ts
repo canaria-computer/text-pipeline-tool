@@ -8,13 +8,13 @@ export const calculateDiff = (oldText: string, newText: string): DiffResult => {
   let removedCount = 0;
 
   const segments: DiffSegment[] = changes.map((change) => {
-    let type: DiffType = 'equal';
+    let type: DiffType = "equal";
 
     if (change.added) {
-      type = 'add';
+      type = "add";
       addedCount += change.value.length;
     } else if (change.removed) {
-      type = 'remove';
+      type = "remove";
       removedCount += change.value.length;
     }
 

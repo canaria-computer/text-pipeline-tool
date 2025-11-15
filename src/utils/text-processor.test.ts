@@ -3,9 +3,10 @@ import { processText } from "./text-processor";
 import type { PipelineStage } from "~/types/pipeline";
 
 vi.mock("./wasm-helper", () => ({
-  unescapeString: (input: string) => input.replace(/\\n/g, "\n").replace(/\\t/g, "\t"),
+  unescapeString: (input: string) =>
+    input.replace(/\\n/g, "\n").replace(/\\t/g, "\t"),
   isWasmReady: () => true,
-  initWasm: async () => { },
+  initWasm: async () => {},
 }));
 
 describe("processText with WASM unescape", () => {

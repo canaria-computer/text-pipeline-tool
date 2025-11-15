@@ -70,7 +70,8 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
     const moveStageDown = $((stageId: string) => {
       const sortedStages = [...stages].sort((a, b) => a.order - b.order);
       const currentIndex = sortedStages.findIndex((s) => s.id === stageId);
-      if (currentIndex === -1 || currentIndex >= sortedStages.length - 1) return;
+      if (currentIndex === -1 || currentIndex >= sortedStages.length - 1)
+        return;
 
       const newStages = [...sortedStages];
       [newStages[currentIndex], newStages[currentIndex + 1]] = [
@@ -175,7 +176,7 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
             </p>
             <button
               onClick$={addStage}
-              class="text-primary-600 border-primary-600 hover:bg-primary-50 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md border bg-white px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
+              class="text-primary-600 border-primary-600 hover:bg-primary-50 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md border bg-white px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
             >
               <div class="i-heroicons-plus h-4 w-4"></div>
               Add First Stage
@@ -184,7 +185,9 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
         ) : (
           <div class="space-y-3">
             {sortedStages.map((stage) => {
-              const stageIndex = sortedStages.findIndex((s) => s.id === stage.id);
+              const stageIndex = sortedStages.findIndex(
+                (s) => s.id === stage.id,
+              );
               return (
                 <div
                   key={stage.id}
@@ -222,15 +225,17 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
               class={[
                 "flex h-16 items-center justify-center rounded-lg border-2 border-dashed text-sm transition-colors",
                 dragState.isDragging &&
-                  dragState.dropTargetIndex === sortedStages.length
+                dragState.dropTargetIndex === sortedStages.length
                   ? "border-gray-300 bg-blue-100 text-blue-700 dark:border-gray-600 dark:bg-blue-900/30 dark:text-blue-300"
                   : "border-gray-300 bg-transparent text-gray-400 dark:border-gray-600 dark:text-gray-500",
               ]}
-              onDragOver$={(event) => handleDragOver(event, sortedStages.length)}
+              onDragOver$={(event) =>
+                handleDragOver(event, sortedStages.length)
+              }
               onDrop$={(event) => handleDrop(event, sortedStages.length)}
             >
               {dragState.isDragging &&
-                dragState.dropTargetIndex === sortedStages.length
+              dragState.dropTargetIndex === sortedStages.length
                 ? "Release to drop here"
                 : "Drop here to add at the end"}
             </div>

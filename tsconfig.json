@@ -3,12 +3,7 @@
     "allowJs": true,
     "target": "ES2017",
     "module": "ES2022",
-    "lib": [
-      "es2022",
-      "DOM",
-      "WebWorker",
-      "DOM.Iterable"
-    ],
+    "lib": ["es2022", "DOM", "WebWorker", "DOM.Iterable"],
     "jsx": "react-jsx",
     "jsxImportSource": "@builder.io/qwik",
     "strict": true,
@@ -22,9 +17,7 @@
     "outDir": "tmp",
     "noEmit": true,
     "paths": {
-      "~/*": [
-        "./src/*"
-      ],
+      "~/*": ["./src/*"],
       "@pipeline-specific/wasm-processor": [
         "./text-pipline-specific-processor-wasm/pkg/text_pipline_specific_processor_wasm.js"
       ],
@@ -33,9 +26,5 @@
       ]
     }
   },
-  "include": [
-    "src",
-    "./*.d.ts",
-    "./*.config.ts"
-  ]
+  "include": ["src", "./*.d.ts", "./*.config.ts"]
 }

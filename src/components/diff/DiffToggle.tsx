@@ -43,5 +43,5 @@ export const DiffToggle = component$<DiffToggleProps>(
         )}
       </button>
     );
-  }
+  },
 );

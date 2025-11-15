@@ -8,7 +8,7 @@ import { unescapeString, isWasmReady } from "./wasm-helper";
 export function processText(
   input: string,
   stages: PipelineStage[],
-  options?: { unescapeInput?: boolean; unescapeOutput?: boolean }
+  options?: { unescapeInput?: boolean; unescapeOutput?: boolean },
 ): PipelineResult {
   const startTime = performance.now();
   const steps: StepResult[] = [];
@@ -121,9 +121,7 @@ export function validateRegex(pattern: string): {
   error?: string;
 } {
   try {
-    const processedPattern = isWasmReady()
-      ? unescapeString(pattern)
-      : pattern;
+    const processedPattern = isWasmReady() ? unescapeString(pattern) : pattern;
     new RegExp(processedPattern);
     return { isValid: true };
   } catch (error) {

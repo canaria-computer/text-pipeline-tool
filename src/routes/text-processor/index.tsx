@@ -1,4 +1,10 @@
-import { component$, useSignal, useComputed$, useVisibleTask$, $ } from "@builder.io/qwik";
+import {
+  component$,
+  useSignal,
+  useComputed$,
+  useVisibleTask$,
+  $,
+} from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { PipelineBuilder } from "~/components/pipeline/pipeline-builder";
 import { TextInput } from "~/components/text-processor/text-input";
@@ -132,7 +138,9 @@ export default component$(() => {
                     type="checkbox"
                     checked={unescapeInput.value}
                     onChange$={(e) =>
-                      (unescapeInput.value = (e.target as HTMLInputElement).checked)
+                      (unescapeInput.value = (
+                        e.target as HTMLInputElement
+                      ).checked)
                     }
                     disabled={!wasmReady.value}
                     class="h-4 w-4 rounded border-gray-300"
@@ -146,7 +154,9 @@ export default component$(() => {
                     type="checkbox"
                     checked={unescapeOutput.value}
                     onChange$={(e) =>
-                      (unescapeOutput.value = (e.target as HTMLInputElement).checked)
+                      (unescapeOutput.value = (
+                        e.target as HTMLInputElement
+                      ).checked)
                     }
                     disabled={!wasmReady.value}
                     class="h-4 w-4 rounded border-gray-300"
@@ -189,7 +199,8 @@ export default component$(() => {
             </p>
             <p class="mt-3 text-xs">
               Escape sequences are automatically converted to control characters
-              when using regex matching. Disable regex for plain text processing.
+              when using regex matching. Disable regex for plain text
+              processing.
             </p>
           </div>
         </div>
