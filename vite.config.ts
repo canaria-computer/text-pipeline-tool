@@ -63,6 +63,13 @@ export default defineConfig(({ command, mode }): UserConfig => {
         "Cache-Control": "public, max-age=600",
       },
     },
+    resolve: {
+      alias: {
+        "@pipline-specific-wasm-processor": new URL('./text-pipline-specific-processor-wasm/pkg',
+          import.meta.url
+        ).pathname
+      }
+    }
   };
 });
 // *** utils ***
