@@ -56,6 +56,7 @@
     "wrangler": "^3.0.0"
   },
   "dependencies": {
+    "diff": "^8.0.2",
     "hono": "^4.8.5"
   }
 }
