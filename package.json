@@ -11,8 +11,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prebuild": "npm run build:wasm",
-    "predev": "npm run build:wasm",
     "build": "qwik build",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
