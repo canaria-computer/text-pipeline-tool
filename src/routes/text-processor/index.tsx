@@ -1,22 +1,35 @@
-import { component$, useSignal, useComputed$, $ } from "@builder.io/qwik";
+import { component$, useSignal, useComputed$, useVisibleTask$, $ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
 import { PipelineBuilder } from "~/components/pipeline/pipeline-builder";
 import { TextInput } from "~/components/text-processor/text-input";
 import { TextOutput } from "~/components/text-processor/text-output";
 import type { PipelineStage } from "~/types/pipeline";
 import { processText } from "~/utils/text-processor";
+import { initWasm } from "~/utils/wasm-helper";
 import { textProcessingExamples } from "~/data/examples";
 
 export default component$(() => {
   const inputText = useSignal("");
   const stages = useSignal<PipelineStage[]>([]);
   const selectedExampleId = useSignal("");
+  const unescapeInput = useSignal(false);
+  const unescapeOutput = useSignal(false);
+  const wasmReady = useSignal(false);
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(async () => {
+    await initWasm();
+    wasmReady.value = true;
+  });
 
   const result = useComputed$(() => {
     if (!inputText.value || stages.value.length === 0) {
       return null;
     }
-    return processText(inputText.value, stages.value);
+    return processText(inputText.value, stages.value, {
+      unescapeInput: unescapeInput.value,
+      unescapeOutput: unescapeOutput.value,
+    });
   });
 
   const loadExample = $((exampleId?: string) => {
@@ -39,7 +52,6 @@ export default component$(() => {
   return (
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Header */}
         <div class="mb-8">
           <div class="flex items-center justify-between">
             <div>
@@ -59,7 +71,7 @@ export default component$(() => {
                     event.target as HTMLSelectElement
                   ).value;
                 }}
-                class="focus:border-primary-500 focus:ring-primary-500 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+                class="focus:border-primary-500 focus:ring-primary-500 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="">Select an example...</option>
                 {textProcessingExamples.map((example) => (
@@ -70,14 +82,14 @@ export default component$(() => {
               </select>
               <button
                 onClick$={() => loadExample()}
-                class="text-primary-600 border-primary-600 hover:bg-primary-50 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md border bg-white px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+                class="text-primary-600 border-primary-600 hover:bg-primary-50 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md border bg-white px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none dark:border-blue-500 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
               >
                 <div class="i-heroicons-sparkles h-4 w-4"></div>
                 Load Example
               </button>
               <button
                 onClick$={clearAll}
-                class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
+                class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
               >
                 <div class="i-heroicons-trash h-4 w-4"></div>
                 Clear All
@@ -86,9 +98,7 @@ export default component$(() => {
           </div>
         </div>
 
-        {/* Main Content */}
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-          {/* Left Column - Pipeline Configuration */}
           <div class="space-y-6">
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
               <PipelineBuilder
@@ -100,9 +110,7 @@ export default component$(() => {
             </div>
           </div>
 
-          {/* Right Column - Input/Output */}
           <div class="space-y-6">
-            {/* Input */}
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
               <TextInput
                 value={inputText}
@@ -111,20 +119,77 @@ export default component$(() => {
               />
             </div>
 
-            {/* Output */}
+            <div class="rounded-lg border border-gray-200 bg-white px-6 py-4 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+              <div class="flex flex-wrap items-center gap-4">
+                <div class="flex items-center gap-2">
+                  <div class="i-heroicons-cog-6-tooth h-5 w-5 text-gray-500 dark:text-gray-400"></div>
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Escape Sequence Options
+                  </span>
+                </div>
+                <label class="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={unescapeInput.value}
+                    onChange$={(e) =>
+                      (unescapeInput.value = (e.target as HTMLInputElement).checked)
+                    }
+                    disabled={!wasmReady.value}
+                    class="h-4 w-4 rounded border-gray-300"
+                  />
+                  <span class="text-sm text-gray-700 dark:text-gray-300">
+                    Unescape Input
+                  </span>
+                </label>
+                <label class="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={unescapeOutput.value}
+                    onChange$={(e) =>
+                      (unescapeOutput.value = (e.target as HTMLInputElement).checked)
+                    }
+                    disabled={!wasmReady.value}
+                    class="h-4 w-4 rounded border-gray-300"
+                  />
+                  <span class="text-sm text-gray-700 dark:text-gray-300">
+                    Unescape Output
+                  </span>
+                </label>
+                {!wasmReady.value && (
+                  <div class="flex items-center gap-1 text-xs text-gray-500">
+                    <div class="i-heroicons-arrow-path h-3 w-3 animate-spin"></div>
+                    Loading WASM...
+                  </div>
+                )}
+                {wasmReady.value && (
+                  <div class="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                    <div class="i-heroicons-check-circle h-3 w-3"></div>
+                    WASM Ready
+                  </div>
+                )}
+              </div>
+              <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                Enable to convert escape sequences like \n, \t, \r in patterns
+                and text
+              </p>
+            </div>
+
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
               <TextOutput result={result.value} inputText={inputText.value} />
             </div>
           </div>
         </div>
 
-        {/* Footer */}
         <div class="mt-12 border-t border-gray-200 pt-8 dark:border-gray-700">
           <div class="text-center text-sm text-gray-500 dark:text-gray-400">
             <p>
               Build powerful text processing pipelines with drag-and-drop
               stages. Supports regular expressions, case sensitivity, word
-              boundaries, and more.
+              boundaries, and escape sequences (\\n, \\t, etc).
+            </p>
+            <p class="mt-3 text-xs">
+              Escape sequences are automatically converted to control characters
+              when using regex matching. Disable regex for plain text processing.
             </p>
           </div>
         </div>
@@ -139,12 +204,12 @@ export const head: DocumentHead = {
     {
       name: "description",
       content:
-        "A powerful text processing tool with multi-stage regular expression pipeline, drag-and-drop interface, and real-time preview.",
+        "A powerful text processing tool with multi-stage regular expression pipeline, drag-and-drop interface, escape sequence support, and real-time preview.",
     },
     {
       name: "keywords",
       content:
-        "text processing, regex, regular expressions, text transformation, pipeline, batch processing",
+        "text processing, regex, regular expressions, text transformation, pipeline, batch processing, escape sequences",
     },
   ],
 };
