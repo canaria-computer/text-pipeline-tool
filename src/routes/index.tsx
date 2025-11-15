@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { Link, type DocumentHead } from "@builder.io/qwik-city";
 
 export default component$(() => {
   return (
@@ -88,6 +88,19 @@ export default component$(() => {
                 Configure case sensitivity, word boundaries, and more
               </p>
             </div>
+
+            <Link href="/milestone">
+              <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+                <div class="i-heroicons-adjustments-horizontal text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12">
+                </div>
+                <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  Milestones
+                </h3>
+                <p class="text-gray-600 dark:text-gray-400">
+                  Go to Milestones page.
+                </p>
+              </div>
+            </Link>
           </div>
 
           {/* CTA */}
