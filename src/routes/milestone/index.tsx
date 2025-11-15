@@ -46,12 +46,12 @@ const TimelineList = component$<{ items: MilestoneItem[] }>(({ items }) => {
       {items.map((item, index) => (
         <li key={item.id} class="relative flex flex-col gap-2">
           {index < items.length - 1 && (
-            <span class="timeline-connector absolute left-6 top-14 h-[calc(100%+1.5rem)] w-0.5 bg-gray-200 dark:bg-gray-700"></span>
+            <span class="timeline-connector absolute top-14 left-6 h-[calc(100%+1.5rem)] w-0.5 bg-gray-200 dark:bg-gray-700"></span>
           )}
 
           <div
             class={[
-              "timeline-item relative flex gap-4 rounded-lg border-2 bg-white p-6 transition-all duration-300 hover:border-opacity-100 dark:bg-gray-900",
+              "timeline-item hover:border-opacity-100 relative flex gap-4 rounded-lg border-2 bg-white p-6 transition-all duration-300 dark:bg-gray-900",
               item.completed
                 ? "border-green-300 dark:border-green-700"
                 : "border-blue-300 dark:border-blue-700",

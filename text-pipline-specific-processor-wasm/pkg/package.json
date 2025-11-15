@@ -1,0 +1,15 @@
+{
+  "name": "@pipeline-specific/wasm-processor",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "text_pipline_specific_processor_wasm_bg.wasm",
+    "text_pipline_specific_processor_wasm.js",
+    "text_pipline_specific_processor_wasm.d.ts"
+  ],
+  "main": "text_pipline_specific_processor_wasm.js",
+  "types": "text_pipline_specific_processor_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

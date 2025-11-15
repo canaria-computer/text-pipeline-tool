@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@pipeline-specific/wasm-processor':
+        specifier: file:./text-pipline-specific-processor-wasm/pkg
+        version: file:text-pipline-specific-processor-wasm/pkg
       diff:
         specifier: ^8.0.2
         version: 8.0.2
@@ -782,6 +785,9 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@pipeline-specific/wasm-processor@file:text-pipline-specific-processor-wasm/pkg':
+    resolution: {directory: text-pipline-specific-processor-wasm/pkg, type: directory}
 
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
@@ -3418,6 +3424,8 @@ snapshots:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
+
+  '@pipeline-specific/wasm-processor@file:text-pipline-specific-processor-wasm/pkg': {}
 
   '@polka/url@1.0.0-next.29': {}
 

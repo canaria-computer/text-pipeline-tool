@@ -17,7 +17,13 @@
     "outDir": "tmp",
     "noEmit": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@pipeline-specific/wasm-processor": [
+        "./text-pipline-specific-processor-wasm/pkg/text_pipline_specific_processor_wasm.js"
+      ],
+      "@pipeline-specific/wasm-processor/text_pipline_specific_processor_wasm": [
+        "./text-pipline-specific-processor-wasm/pkg/text_pipline_specific_processor_wasm.d.ts"
+      ]
     }
   },
   "include": ["src", "./*.d.ts", "./*.config.ts"]

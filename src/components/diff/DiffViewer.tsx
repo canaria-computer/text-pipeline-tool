@@ -11,7 +11,7 @@ export const DiffViewer = component$<DiffViewerProps>(
     return (
       <div class="diff-viewer font-mono text-sm">
         {mode === "inline" && (
-          <div class="whitespace-pre-wrap break-words">
+          <div class="break-words whitespace-pre-wrap">
             {segments.map((segment, index) => {
               if (segment.type === "add") {
                 return (
