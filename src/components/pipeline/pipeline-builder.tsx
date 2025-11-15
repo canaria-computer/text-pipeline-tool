@@ -90,16 +90,20 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
           </h2>
           <button
             onClick$={addStage}
-            class="bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none dark:text-white"
-          >
-            <div class="i-heroicons-plus h-4 w-4"></div>
-            Add Stage
+
+            class="group relative inline-block overflow-hidden border border-stone-600 px-8 py-3">
+            <span class="absolute inset-y-0 left-0 w-0.5 bg-stone-600 transition-all group-hover:w-full" />
+
+            <div class="relative text-sm font-medium text-stone-600 transition-colors group-hover:text-white">
+              <div class="i-heroicons-plus h-4 w-4" />
+              Add Stage
+            </div>
           </button>
         </div>
 
         {stages.length === 0 ? (
           <div class="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 py-12 text-center dark:border-gray-600 dark:bg-gray-800">
-            <div class="i-heroicons-cog-6-tooth mx-auto mb-4 h-12 w-12 text-gray-400"></div>
+            <div class="i-heroicons-cog-6-tooth mx-auto mb-4 h-12 w-12 text-gray-400" />
             <h3 class="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
               No stages yet
             </h3>
