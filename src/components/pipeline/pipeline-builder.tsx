@@ -2,6 +2,7 @@ import { component$, useStore, $, type QRL } from "@builder.io/qwik";
 import type { PipelineStage, DragState } from "~/types/pipeline";
 import { PipelineStageComponent } from "./pipeline-stage";
 import { reorderStages, findStageIndex } from "~/utils/drag-drop";
+import { nanoid } from "nanoid";
 
 interface PipelineBuilderProps {
   stages: PipelineStage[];
@@ -18,7 +19,7 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
 
     const addStage = $(() => {
       const newStage: PipelineStage = {
-        id: `stage-${Date.now()}`,
+        id: nanoid(),
         name: `Stage ${stages.length + 1}`,
         pattern: "",
         replacement: "",
@@ -49,9 +50,46 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
       onStagesChange(reorderedStages);
     });
 
+    const moveStageUp = $((stageId: string) => {
+      const sortedStages = [...stages].sort((a, b) => a.order - b.order);
+      const currentIndex = sortedStages.findIndex((s) => s.id === stageId);
+      if (currentIndex <= 0) return;
+
+      const newStages = [...sortedStages];
+      [newStages[currentIndex], newStages[currentIndex - 1]] = [
+        newStages[currentIndex - 1],
+        newStages[currentIndex],
+      ];
+
+      const reorderedStages = newStages.map((stage, index) => ({
+        ...stage,
+        order: index,
+      }));
+      onStagesChange(reorderedStages);
+    });
+
+    const moveStageDown = $((stageId: string) => {
+      const sortedStages = [...stages].sort((a, b) => a.order - b.order);
+      const currentIndex = sortedStages.findIndex((s) => s.id === stageId);
+      if (currentIndex === -1 || currentIndex >= sortedStages.length - 1) return;
+
+      const newStages = [...sortedStages];
+      [newStages[currentIndex], newStages[currentIndex + 1]] = [
+        newStages[currentIndex + 1],
+        newStages[currentIndex],
+      ];
+
+      const reorderedStages = newStages.map((stage, index) => ({
+        ...stage,
+        order: index,
+      }));
+      onStagesChange(reorderedStages);
+    });
+
     const handleDragStart = $((stageId: string) => {
       dragState.isDragging = true;
       dragState.draggedStageId = stageId;
+      dragState.dropTargetIndex = null;
     });
 
     const handleDragEnd = $(() => {
@@ -62,25 +100,52 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
 
     const handleDragOver = $((event: DragEvent, targetIndex: number) => {
       event.preventDefault();
+      event.stopPropagation();
+
+      if (!dragState.isDragging || !dragState.draggedStageId) return;
+
       if (event.dataTransfer) {
         event.dataTransfer.dropEffect = "move";
       }
+
       dragState.dropTargetIndex = targetIndex;
     });
 
     const handleDrop = $((event: DragEvent, targetIndex: number) => {
       event.preventDefault();
+      event.stopPropagation();
 
-      if (!dragState.draggedStageId) return;
+      if (!dragState.draggedStageId) {
+        handleDragEnd();
+        return;
+      }
 
-      const fromIndex = findStageIndex(stages, dragState.draggedStageId);
-      if (fromIndex === -1 || fromIndex === targetIndex) return;
+      const sortedStages = [...stages].sort((a, b) => a.order - b.order);
+      const fromIndex = sortedStages.findIndex(
+        (s) => s.id === dragState.draggedStageId,
+      );
 
-      const reorderedStages = reorderStages(stages, fromIndex, targetIndex);
-      onStagesChange(reorderedStages);
+      if (fromIndex === -1) {
+        handleDragEnd();
+        return;
+      }
+
+      if (fromIndex !== targetIndex) {
+        const newStages = [...sortedStages];
+        const [movedStage] = newStages.splice(fromIndex, 1);
+        newStages.splice(targetIndex, 0, movedStage);
+
+        const reorderedStages = newStages.map((stage, index) => ({
+          ...stage,
+          order: index,
+        }));
+        onStagesChange(reorderedStages);
+      }
 
       handleDragEnd();
     });
+
+    const sortedStages = [...stages].sort((a, b) => a.order - b.order);
 
     return (
       <div class="space-y-4">
@@ -90,16 +155,19 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
           </h2>
           <button
             onClick$={addStage}
-            class="bg-primary-600 hover:bg-primary-700 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none dark:text-white"
+            class="group relative inline-block overflow-hidden border border-stone-600 px-8 py-3"
           >
-            <div class="i-heroicons-plus h-4 w-4"></div>
-            Add Stage
+            <span class="absolute inset-y-0 left-0 w-0.5 bg-stone-600 transition-all group-hover:w-full" />
+            <div class="relative flex items-center gap-2 text-sm font-medium text-stone-600 transition-colors group-hover:text-white">
+              <div class="i-heroicons-plus h-4 w-4" />
+              Add Stage
+            </div>
           </button>
         </div>
 
         {stages.length === 0 ? (
           <div class="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 py-12 text-center dark:border-gray-600 dark:bg-gray-800">
-            <div class="i-heroicons-cog-6-tooth mx-auto mb-4 h-12 w-12 text-gray-400"></div>
+            <div class="i-heroicons-cog-6-tooth mx-auto mb-4 h-12 w-12 text-gray-400" />
             <h3 class="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100">
               No stages yet
             </h3>
@@ -108,7 +176,7 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
             </p>
             <button
               onClick$={addStage}
-              class="text-primary-600 border-primary-600 hover:bg-primary-50 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md border bg-white px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none"
+              class="text-primary-600 border-primary-600 hover:bg-primary-50 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md border bg-white px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
             >
               <div class="i-heroicons-plus h-4 w-4"></div>
               Add First Stage
@@ -116,19 +184,14 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
           </div>
         ) : (
           <div class="space-y-3">
-            {stages
-              .sort((a, b) => a.order - b.order)
-              .map((stage, index) => (
+            {sortedStages.map((stage) => {
+              const stageIndex = sortedStages.findIndex((s) => s.id === stage.id);
+              return (
                 <div
                   key={stage.id}
-                  class={[
-                    "relative",
-                    dragState.dropTargetIndex === index
-                      ? "drop-zone active"
-                      : "",
-                  ]}
-                  onDragOver$={(event) => handleDragOver(event, index)}
-                  onDrop$={(event) => handleDrop(event, index)}
+                  class="relative"
+                  onDragOver$={(event) => handleDragOver(event, stageIndex)}
+                  onDrop$={(event) => handleDrop(event, stageIndex)}
                 >
                   <PipelineStageComponent
                     stage={stage}
@@ -136,24 +199,41 @@ export const PipelineBuilder = component$<PipelineBuilderProps>(
                       updateStage(stage.id, updatedFields),
                     )}
                     onDelete={$(() => deleteStage(stage.id))}
+                    onMoveUp={$(() => moveStageUp(stage.id))}
+                    onMoveDown={$(() => moveStageDown(stage.id))}
                     onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
                     isDragging={
                       dragState.isDragging &&
                       dragState.draggedStageId === stage.id
                     }
+                    isFirst={stageIndex === 0}
+                    isLast={stageIndex === sortedStages.length - 1}
+                    isDropTarget={
+                      dragState.isDragging &&
+                      dragState.dropTargetIndex === stageIndex &&
+                      dragState.draggedStageId !== stage.id
+                    }
                   />
                 </div>
-              ))}
+              );
+            })}
 
             <div
               class={[
-                "drop-zone flex h-16 items-center justify-center text-sm text-gray-400 dark:text-gray-500",
-                dragState.dropTargetIndex === stages.length ? "active" : "",
+                "flex h-16 items-center justify-center rounded-lg border-2 border-dashed text-sm transition-colors",
+                dragState.isDragging &&
+                  dragState.dropTargetIndex === sortedStages.length
+                  ? "border-gray-300 bg-blue-100 text-blue-700 dark:border-gray-600 dark:bg-blue-900/30 dark:text-blue-300"
+                  : "border-gray-300 bg-transparent text-gray-400 dark:border-gray-600 dark:text-gray-500",
               ]}
-              onDragOver$={(event) => handleDragOver(event, stages.length)}
-              onDrop$={(event) => handleDrop(event, stages.length)}
+              onDragOver$={(event) => handleDragOver(event, sortedStages.length)}
+              onDrop$={(event) => handleDrop(event, sortedStages.length)}
             >
-              Drop here to add at the end
+              {dragState.isDragging &&
+                dragState.dropTargetIndex === sortedStages.length
+                ? "Release to drop here"
+                : "Drop here to add at the end"}
             </div>
           </div>
         )}

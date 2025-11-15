@@ -23,7 +23,8 @@ export default component$(() => {
           {/* Features Grid */}
           <div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <div class="i-heroicons-cog-6-tooth text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12"></div>
+              <div class="i-heroicons-cog-6-tooth text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12">
+              </div>
               <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Multi-stage Pipeline
               </h3>
@@ -34,7 +35,8 @@ export default component$(() => {
             </div>
 
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <div class="i-heroicons-arrows-up-down text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12"></div>
+              <div class="i-heroicons-arrows-up-down text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12">
+              </div>
               <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Drag & Drop
               </h3>
@@ -44,7 +46,8 @@ export default component$(() => {
             </div>
 
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <div class="i-heroicons-eye text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12"></div>
+              <div class="i-heroicons-eye text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12">
+              </div>
               <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Real-time Preview
               </h3>
@@ -54,7 +57,8 @@ export default component$(() => {
             </div>
 
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <div class="i-heroicons-code-bracket text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12"></div>
+              <div class="i-heroicons-code-bracket text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12">
+              </div>
               <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Regex Support
               </h3>
@@ -64,7 +68,8 @@ export default component$(() => {
             </div>
 
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <div class="i-heroicons-list-bullet text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12"></div>
+              <div class="i-heroicons-list-bullet text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12">
+              </div>
               <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Step-by-step View
               </h3>
@@ -74,7 +79,8 @@ export default component$(() => {
             </div>
 
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <div class="i-heroicons-adjustments-horizontal text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12"></div>
+              <div class="i-heroicons-adjustments-horizontal text-primary-600 dark:text-primary-400 mx-auto mb-4 h-12 w-12">
+              </div>
               <h3 class="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
                 Advanced Options
               </h3>
