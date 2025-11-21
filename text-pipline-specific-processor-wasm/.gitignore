@@ -1,6 +1,4 @@
-# Cargo build artifacts
+# Cargo build artifacts only
 /target/
 
-# Large WASM files - exclude from repo
-/pkg/*.wasm
-/pkg/*_bg.js
+# Note: pkg/ contents are tracked because CI/CD cannot compile Rust/WASM in JS-only environments
