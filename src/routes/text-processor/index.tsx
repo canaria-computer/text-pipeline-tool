@@ -38,6 +38,10 @@ export default component$(() => {
     });
   });
 
+  const isExampleSelected = useComputed$(() => {
+    return selectedExampleId.value !== "";
+  });
+
   const loadExample = $((exampleId?: string) => {
     const id =
       exampleId || selectedExampleId.value || textProcessingExamples[0].id;
@@ -59,7 +63,7 @@ export default component$(() => {
     <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div class="mb-8">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-col gap-4">
             <div>
               <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
                 Text Processing Pipeline
@@ -69,7 +73,7 @@ export default component$(() => {
                 and simple replacements
               </p>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex flex-col sm:flex-row gap-3">
               <select
                 value={selectedExampleId.value}
                 onChange$={(event) => {
@@ -77,7 +81,7 @@ export default component$(() => {
                     event.target as HTMLSelectElement
                   ).value;
                 }}
-                class="focus:border-primary-500 focus:ring-primary-500 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                class="focus:border-primary-500 focus:ring-primary-500 w-full sm:flex-1 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:ring-2 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="">Select an example...</option>
                 {textProcessingExamples.map((example) => (
@@ -86,23 +90,30 @@ export default component$(() => {
                   </option>
                 ))}
               </select>
-              <button
-                onClick$={() => loadExample()}
-                class="text-primary-600 border-primary-600 hover:bg-primary-50 focus:ring-primary-500 inline-flex items-center gap-2 rounded-md border bg-white px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none dark:border-blue-500 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
-              >
-                <div class="i-heroicons-sparkles h-4 w-4"></div>
-                Load Example
-              </button>
-              <button
-                onClick$={clearAll}
-                class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-              >
-                <div class="i-heroicons-trash h-4 w-4"></div>
-                Clear All
-              </button>
+              <div class="flex gap-3">
+                <button
+                  onClick$={() => loadExample()}
+                  disabled={!isExampleSelected.value}
+                  class={`inline-flex items-center justify-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none whitespace-nowrap ${isExampleSelected.value
+                    ? "text-primary-600 border-primary-600 bg-white hover:bg-primary-50 focus:ring-primary-500 dark:border-blue-500 dark:bg-gray-800 dark:text-blue-400 dark:hover:bg-gray-700"
+                    : "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed dark:border-gray-700 dark:bg-gray-800 dark:text-gray-600"
+                    }`}
+                >
+                  <div class="i-heroicons-sparkles h-4 w-4"></div>
+                  Load Example
+                </button>
+                <button
+                  onClick$={clearAll}
+                  class="inline-flex items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 whitespace-nowrap"
+                >
+                  <div class="i-heroicons-trash h-4 w-4"></div>
+                  Clear All
+                </button>
+              </div>
             </div>
           </div>
         </div>
+
 
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <div class="space-y-6">
@@ -138,9 +149,9 @@ export default component$(() => {
                     type="checkbox"
                     checked={unescapeInput.value}
                     onChange$={(e) =>
-                      (unescapeInput.value = (
-                        e.target as HTMLInputElement
-                      ).checked)
+                    (unescapeInput.value = (
+                      e.target as HTMLInputElement
+                    ).checked)
                     }
                     disabled={!wasmReady.value}
                     class="h-4 w-4 rounded border-gray-300"
@@ -154,9 +165,9 @@ export default component$(() => {
                     type="checkbox"
                     checked={unescapeOutput.value}
                     onChange$={(e) =>
-                      (unescapeOutput.value = (
-                        e.target as HTMLInputElement
-                      ).checked)
+                    (unescapeOutput.value = (
+                      e.target as HTMLInputElement
+                    ).checked)
                     }
                     disabled={!wasmReady.value}
                     class="h-4 w-4 rounded border-gray-300"
