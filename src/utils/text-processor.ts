@@ -1,9 +1,9 @@
 import type {
+  PipelineResult,
   PipelineStage,
   StepResult,
-  PipelineResult,
 } from "~/types/pipeline";
-import { unescapeString, isWasmReady } from "./wasm-helper";
+import { isWasmReady, unescapeString } from "./wasm-helper";
 
 export function processText(
   input: string,
@@ -48,7 +48,7 @@ function processStage(input: string, stage: PipelineStage): StepResult {
   try {
     let pattern = stage.pattern;
     let replacement = stage.replacement;
-    let flags = "g";
+    let flags = "gm";
 
     if (isWasmReady()) {
       pattern = unescapeString(pattern);
