@@ -177,6 +177,355 @@ Also normalize "quotes" and 'apostrophes'.`,
       },
     ],
   },
+  {
+    id: "log-parsing",
+    name: "Log File Parsing",
+    description: "Extract and format structured data from application logs",
+    inputText: `[2024-03-15 14:32:01] ERROR: Failed to connect to database
+[2024-03-15 14:32:05] WARNING: Retry attempt 1/3
+[2024-03-15 14:32:10] INFO: Connection established successfully
+
+
+[2024-03-15 14:32:15] DEBUG: Query executed in 0.125ms
+[2024-03-15 14:33:00] ERROR: Timeout exception in module auth.login`,
+    stages: [
+      {
+        id: "extract-timestamp",
+        name: "Extract Timestamp",
+        pattern: "\\[(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\\]",
+        replacement: "Time: $1 |",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 0,
+      },
+      {
+        id: "highlight-errors",
+        name: "Highlight ERROR level",
+        pattern: "ERROR:",
+        replacement: "⚠️ ERROR:",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: false,
+        enabled: true,
+        order: 1,
+      },
+      {
+        id: "remove-debug",
+        name: "Remove DEBUG entries",
+        pattern: "Time:.*?DEBUG:.*?\\n",
+        replacement: "",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 2,
+      },
+      {
+        id: "clean-lines",
+        name: "Clean Empty Lines",
+        pattern: "\\n\\n+",
+        replacement: "\\n",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 3,
+      },
+    ],
+  },
+  {
+    id: "markdown-to-plain",
+    name: "Markdown to Plain Text",
+    description: "Convert markdown formatting to readable plain text",
+    inputText: `# Main Title
+
+## Section 1
+This is **bold text** and this is *italic text*.
+
+- Item 1
+- Item 2
+- Item 3
+
+[Link text](https://example.com)
+
+\`\`\`javascript
+const code = "example";
+\`\`\`
+
+> This is a blockquote`,
+    stages: [
+      {
+        id: "remove-code-blocks",
+        name: "Remove Code Blocks",
+        pattern: "```[\\s\\S]*?```",
+        replacement: "[CODE BLOCK]",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 0,
+      },
+      {
+        id: "headers",
+        name: "Convert Headers",
+        pattern: "^#{1,6}\\s+",
+        replacement: "■ ",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 1,
+      },
+      {
+        id: "bold",
+        name: "Remove Bold Markers",
+        pattern: "\\*\\*([^*]+)\\*\\*",
+        replacement: "$1",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 2,
+      },
+      {
+        id: "italic",
+        name: "Remove Italic Markers",
+        pattern: "\\*([^*]+)\\*",
+        replacement: "$1",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 3,
+      },
+      {
+        id: "links",
+        name: "Extract Link URLs",
+        pattern: "\\[([^\\]]+)\\]\\(([^)]+)\\)",
+        replacement: "$1 ($2)",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 4,
+      },
+      {
+        id: "list-items",
+        name: "Format List Items",
+        pattern: "^[-*]\\s+",
+        replacement: "  • ",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 5,
+      },
+      {
+        id: "blockquote",
+        name: "Format Blockquotes",
+        pattern: "^>\\s+",
+        replacement: "❝ ",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 6,
+      },
+    ],
+  },
+  {
+    id: "csv-to-table",
+    name: "CSV to Readable Format",
+    description: "Transform CSV data into a more readable format",
+    inputText: `name,age,email,city
+John Doe,28,john@example.com,New York
+Jane Smith,34,jane@example.com,Los Angeles
+Bob Johnson,45,bob@example.com,Chicago`,
+    stages: [
+      {
+        id: "header-separator",
+        name: "Add Header Separator",
+        pattern: "\\n",
+        replacement: "\\n---\\n",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: false,
+        enabled: true,
+        order: 0,
+      },
+      {
+        id: "remove-extra-separator",
+        name: "Remove Extra Separators",
+        pattern: "(---\\n){2,}",
+        replacement: "---\\n",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 1,
+      },
+      {
+        id: "comma-to-pipe",
+        name: "Convert Commas to Pipes",
+        pattern: ",",
+        replacement: " | ",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: false,
+        enabled: true,
+        order: 2,
+      },
+    ],
+  },
+  {
+    id: "json-cleanup",
+    name: "JSON Data Extraction",
+    description: "Extract values from JSON and format as readable text",
+    inputText:
+      `{"users":[{"id":1,"name":"Alice","status":"active"},{"id":2,"name":"Bob","status":"inactive"},{"id":3,"name":"Charlie","status":"active"}],"timestamp":"2024-03-15T10:30:00Z"}`,
+    stages: [
+      {
+        id: "remove-braces",
+        name: "Remove Structural Characters",
+        pattern: "[{}\\[\\]]",
+        replacement: "",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 0,
+      },
+      {
+        id: "key-value-format",
+        name: "Format Key-Value Pairs",
+        pattern: '"([^"]+)":',
+        replacement: "\\n$1: ",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 1,
+      },
+      {
+        id: "remove-quotes",
+        name: "Remove Quotes",
+        pattern: '"',
+        replacement: "",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: false,
+        enabled: true,
+        order: 2,
+      },
+      {
+        id: "clean-commas",
+        name: "Clean Commas",
+        pattern: ",",
+        replacement: "",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: false,
+        enabled: true,
+        order: 3,
+      },
+      {
+        id: "clean-whitespace",
+        name: "Clean Extra Whitespace",
+        pattern: "\\n\\n+",
+        replacement: "\\n",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 4,
+      },
+    ],
+  },
+  {
+    id: "code-comment-removal",
+    name: "Code Comment Removal",
+    description: "Remove comments from code while preserving structure",
+    inputText: `// This is a single line comment
+function example() {
+  /* Multi-line comment
+     spanning multiple lines */
+  const value = 42; // inline comment
+  return value;
+}
+/* Another block comment */`,
+    stages: [
+      {
+        id: "remove-single-line",
+        name: "Remove Single Line Comments",
+        pattern: "//.*",
+        replacement: "",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 0,
+      },
+      {
+        id: "remove-multi-line",
+        name: "Remove Multi-line Comments",
+        pattern: "/\\*[\\s\\S]*?\\*/",
+        replacement: "",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 1,
+      },
+      {
+        id: "clean-empty-lines",
+        name: "Clean Empty Lines",
+        pattern: "^\\s*\\n",
+        replacement: "",
+        caseSensitive: false,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 2,
+      },
+    ],
+  },
+  {
+    id: "variable-name-converter",
+    name: "Variable Name Converter",
+    description:
+      "Convert variable naming conventions (camelCase to snake_case)",
+    inputText: `const userFirstName = "John";
+const userLastName = "Doe";
+const userEmailAddress = "john@example.com";
+const isUserActive = true;
+const maxRetryCount = 3;`,
+    stages: [
+      {
+        id: "camel-to-snake",
+        name: "Convert camelCase to snake_case",
+        pattern: "([a-z])([A-Z])",
+        replacement: "$1_$2",
+        caseSensitive: true,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 0,
+      },
+      {
+        id: "lowercase-all",
+        name: "Convert to Lowercase",
+        pattern: "([A-Z])",
+        replacement: "$1",
+        caseSensitive: true,
+        wordBoundary: false,
+        useRegex: true,
+        enabled: true,
+        order: 1,
+      },
+    ],
+  },
 ];
 
 export const getExampleById = (
